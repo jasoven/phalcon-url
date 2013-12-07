@@ -178,22 +178,29 @@ class Url extends \Phalcon\Mvc\Url
 			$uri = $current_route->getPattern();
 			if (empty($uri) || !is_string($uri))
 			{
-				throw new \Phalcon\Exception('Error route $expression');
+				throw new \Phalcon\Exception('Error route'.$uri);
 			}
 
 			$params = [];
 			while (preg_match('~\{([a-zA-Z0-9_]++):([^}]++)\}~uD', $uri, $match))
 			{
-				$params[trim($match[1])] = trim($match[2]);
-				$uri = str_replace('{'.$match[1].':'.$match[2].'}', ':'.trim($match[1]), $uri);
+				$params[$match[1]] = $match[2];
+				$uri = str_replace('{'.$match[1].':'.$match[2].'}', ':'.$match[1], $uri);
 			}
 
-			//$expression = preg_replace('~'.URL::REGEX_ESCAPE.'~', '\\\\$0', $uri);
 			$expression = $uri;
 
 			if (false !== strpos($expression, '('))
 			{
-				$expression = str_replace('(', '(?:', $expression);
+				$offset = null;
+				for ($count=1; (false !== ($pos = strpos($expression, '(', $offset))); $count++)
+				{
+					if ('?P' != substr($expression, $pos+1, 2))
+					{
+						$expression = substr_replace($expression, '(?:', $pos, 1);
+					}
+					$offset = $pos + 1;
+				}
 			}
 
 			while (preg_match('~:([a-zA-Z0-9_]++)~uD', $expression, $match))
