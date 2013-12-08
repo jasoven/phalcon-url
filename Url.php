@@ -77,10 +77,10 @@ class Url extends \Phalcon\Mvc\Url
 
 		$router = $this->getDI()->getShared('router');
 		$defaults = array(
-			'namespace'		=> $router->getNamespaceName(),
-			'module'		=> $router->getModuleName(),
-			'controller'	=> $router->getControllerName(),
-			'action'		=> $router->getActionName(),
+			'namespace'		=> null, //$router->getNamespaceName(),
+			'module'		=> null, //$router->getModuleName(),
+			'controller'	=> null, //$router->getControllerName(),
+			'action'		=> null, //$router->getActionName(),
 		);
 
 		$provided_optional = FALSE;
